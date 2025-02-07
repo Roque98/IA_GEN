@@ -12,6 +12,7 @@
         public DateTime FechaCreacion { get; set; }
         public int? IdArchivoPadre { get; set; }
         public int idPromptTemplate { get; set; }
+        public bool archivoVisible { get; set; }
         public CodeGeneratorArchivoEntidad ArchivoPadre { get; set; }
         public ProyectoEntidad Proyecto { get; set; }
     }
