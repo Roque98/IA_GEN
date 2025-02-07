@@ -8,14 +8,19 @@ namespace FolderView.Dapper.Repositorios
     public class ProyectoRepositorio : IProyectoRepository
     {
         private readonly DapperContext _context;
-        public ProyectoRepositorio(DapperContext context)
+        private readonly string DBNAME;
+        public ProyectoRepositorio(
+                DapperContext context,
+                IConfiguration configuration
+            )
         {
             _context = context;
+            DBNAME = configuration["DbName"];
         }
 
         public async Task<List<ProyectoEntidad>> CreateAsync(ProyectoEntidad dto)
         {
-            var query = "IA_GEN..[CodeGenerator_Proyecto_Add]";
+            var query = $"{DBNAME}..[CodeGenerator_Proyecto_Add]";
             var connection = _context.CreateConnection();
             var resultado = await connection.QueryAsync<ProyectoEntidad>(query, new { dto.idTipoProyecto, dto.nombreProyecto }, commandType: CommandType.StoredProcedure);
             return resultado.ToList();
@@ -23,7 +28,7 @@ namespace FolderView.Dapper.Repositorios
 
         public async Task<ProyectoEntidad> GetByIdAsync(int id)
         {
-            var query = "IA_GEN..[CodeGenerator_Proyecto_GetById]";
+            var query = $"{DBNAME}..[CodeGenerator_Proyecto_GetById]";
             var connection = _context.CreateConnection();
             var resultado = await connection.QuerySingleOrDefaultAsync<ProyectoEntidad>(query, new { id }, commandType: CommandType.StoredProcedure);
             return resultado;
@@ -31,7 +36,7 @@ namespace FolderView.Dapper.Repositorios
 
         public async Task<ProyectoEntidad> UpdateAsync(ProyectoEntidad dto)
         {
-            var query = "IA_GEN..[CodeGenerator_Proyecto_Update]";
+            var query = $"{DBNAME}..[CodeGenerator_Proyecto_Update]";
             var connection = _context.CreateConnection();
             var resultado = await connection.QuerySingleOrDefaultAsync<ProyectoEntidad>(query, new { dto.id, dto.idTipoProyecto, dto.nombreProyecto }, commandType: CommandType.StoredProcedure);
             return resultado;
@@ -39,7 +44,7 @@ namespace FolderView.Dapper.Repositorios
 
         public async Task<ProyectoEntidad> DeleteAsync(int id)
         {
-            var query = "IA_GEN..[CodeGenerator_Proyecto_Delete]";
+            var query = $"{DBNAME}..[CodeGenerator_Proyecto_Delete]";
             var connection = _context.CreateConnection();
             var resultado = await connection.QuerySingleOrDefaultAsync<ProyectoEntidad>(query, new { id }, commandType: CommandType.StoredProcedure);
             return resultado;
@@ -47,7 +52,7 @@ namespace FolderView.Dapper.Repositorios
 
         public async Task<List<ProyectoEntidad>> GetAllByIdTipoProyectoAsync(int idTipoProyecto)
         {
-            var query = "IA_GEN..[CodeGenerator_Proyecto_GetAllByTipoProyecto]";
+            var query = $"{DBNAME}..[CodeGenerator_Proyecto_GetAllByTipoProyecto]";
             var connection = _context.CreateConnection();
             var resultado = await connection.QueryAsync<ProyectoEntidad>(query, new { idTipoProyecto }, commandType: CommandType.StoredProcedure);
             return resultado.ToList();
