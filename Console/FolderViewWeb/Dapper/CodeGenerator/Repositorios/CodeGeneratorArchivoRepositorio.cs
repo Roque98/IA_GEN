@@ -9,14 +9,18 @@ namespace FolderView.Dapper.Repositorios
     public class CodeGeneratorArchivoRepositorio : ICodeGeneratorIArchivoRepository
     {
         private readonly DapperContext _context;
-        public CodeGeneratorArchivoRepositorio(DapperContext context)
+        private readonly string DBNAME;
+        public CodeGeneratorArchivoRepositorio(
+                DapperContext context,
+                IConfiguration configuration)
         {
             _context = context;
+            DBNAME = configuration["DbName"];
         }
 
         public async Task<List<CodeGeneratorArchivoEntidad>> CreateAsync(CodeGeneratorArchivoEntidad dto)
         {
-            var query = "IA_GEN..[CodeGenerator_Archivo_Add]";
+            var query = $"{DBNAME}..[CodeGenerator_Archivo_Add]";
             var connection = _context.CreateConnection();
             var resultado = await connection.QueryAsync<CodeGeneratorArchivoEntidad>(query, new { dto.IdProyecto, dto.Extension, dto.Documentacion, dto.Contenido, dto.path, dto.Version, dto.IdArchivoPadre, dto.idPromptTemplate }, commandType: CommandType.StoredProcedure);
             return resultado.ToList();
@@ -24,7 +28,7 @@ namespace FolderView.Dapper.Repositorios
 
         public async Task<CodeGeneratorArchivoEntidad> GetByIdAsync(int id)
         {
-            var query = "IA_GEN..[CodeGenerator_Archivo_GetById]";
+            var query = $"{DBNAME}..[CodeGenerator_Archivo_GetById]";
             var connection = _context.CreateConnection();
             var resultado = await connection.QuerySingleOrDefaultAsync<CodeGeneratorArchivoEntidad>(query, new { id }, commandType: CommandType.StoredProcedure);
             return resultado;
@@ -32,7 +36,7 @@ namespace FolderView.Dapper.Repositorios
 
         public async Task<CodeGeneratorArchivoEntidad> UpdateAsync(CodeGeneratorArchivoEntidad dto)
         {
-            var query = "IA_GEN..[CodeGenerator_Archivo_Update]";
+            var query = $"{DBNAME}..[CodeGenerator_Archivo_Update]";
             var connection = _context.CreateConnection();
             var resultado = await connection.QuerySingleOrDefaultAsync<CodeGeneratorArchivoEntidad>(query, new { dto.IdProyecto, dto.Extension, dto.Documentacion, dto.Contenido, dto.path, dto.Version, dto.IdArchivoPadre, dto.idPromptTemplate }, commandType: CommandType.StoredProcedure);
             return resultado;
@@ -40,7 +44,7 @@ namespace FolderView.Dapper.Repositorios
 
         public async Task<CodeGeneratorArchivoEntidad> DeleteAsync(int id)
         {
-            var query = "IA_GEN..[CodeGenerator_Archivo_Delete]";
+            var query = $"{DBNAME}..[CodeGenerator_Archivo_Delete]";
             var connection = _context.CreateConnection();
             var resultado = await connection.QuerySingleOrDefaultAsync<CodeGeneratorArchivoEntidad>(query, new { id }, commandType: CommandType.StoredProcedure);
             return resultado;
@@ -48,7 +52,7 @@ namespace FolderView.Dapper.Repositorios
 
         public async Task<List<CodeGeneratorArchivoEntidad>> GetAllByIdProyectoAsync(int idProyecto)
         {
-            var query = "IA_GEN..[CodeGenerator_Archivo_GetAllByProyecto]";
+            var query = $"{DBNAME}..[CodeGenerator_Archivo_GetAllByProyecto]";
             var connection = _context.CreateConnection();
             var resultado = await connection.QueryAsync<CodeGeneratorArchivoEntidad>(query, new { idProyecto }, commandType: CommandType.StoredProcedure);
             var result = resultado.ToList();
@@ -64,7 +68,7 @@ namespace FolderView.Dapper.Repositorios
 
         public async Task<List<CodeGeneratorArchivoEntidad>> GetAllByIdPrompTemplateAsync(int idPromptTemplate, int idProyecto)
         {
-            var query = "IA_GEN..[CodeGenerator_Archivo_GetAllByIdPromptTemplate]";
+            var query = $"{DBNAME}..[CodeGenerator_Archivo_GetAllByIdPromptTemplate]";
             var connection = _context.CreateConnection();
             var resultado = await connection.QueryAsync<CodeGeneratorArchivoEntidad>(query, new { idPromptTemplate, idProyecto }, commandType: CommandType.StoredProcedure);
             var result = resultado.ToList();
@@ -80,7 +84,7 @@ namespace FolderView.Dapper.Repositorios
 
         public async Task<List<CodeGeneratorArchivoEntidad>> GetAllByIdArchivoPadreAsync(int id)
         {
-            var query = "IA_GEN..[CodeGenerator_Archivo_GetAll]";
+            var query = $"{DBNAME}..[CodeGenerator_Archivo_GetAll]";
             var connection = _context.CreateConnection();
             var resultado = await connection.QueryAsync<CodeGeneratorArchivoEntidad>(query, new { id }, commandType: CommandType.StoredProcedure);
             return resultado.ToList();
